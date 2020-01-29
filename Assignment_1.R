@@ -1,5 +1,6 @@
 library(tidyverse)
 library(dplyr)
+library(cowplot)
 #setwd("F:/MCS/Data Analytics/Assignments/Assignment 1")
 #getwd()
 
@@ -15,14 +16,22 @@ DD_data[DD_data == ''] <- NA
 #write.csv(DD_data,"F:/MCS/Data Analytics/Assignments/Assignment 1/op2.csv")
 
 #2 Remove duplicates from both the files.
-CBD_data %>% distinct()
-DD_data %>% distinct()
+CBD_data %>% distinct(Application.ID,.keep_all = TRUE)
+DD_data %>% distinct(Application.ID,.keep_all = TRUE)
+nrow(CBD_data)
+nrow(DD_data)
 
 #4 Merge both dataframes/Tibble on Application.ID. Choose a suitable join method 
 df<-merge(x=CBD_data,y=DD_data,by="Application.ID")
 
 #7 Plot a suitable frequency plot to display Gender and Education
 ggplot(DD_data,aes(Education)) +
-geom_bar()
+  geom_bar()
 ggplot(DD_data,aes(Gender)) +
-geom_bar()
+  geom_bar()
+
+#6 Drop one of the duplicate Performance Tags.
+test <- cbind(CBD_data,DD_data) 
+idx <- which(duplicated(names(test)) & names(test) == "Performance.Tag")
+test <- test[,-idx]
+test
